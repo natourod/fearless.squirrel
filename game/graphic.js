@@ -25,7 +25,48 @@ function init()
     noGround = [];
     ground = new Ground(0xffffff, WIDTH, HEIGHT, 10);
     
-    player1 = new Player("player1", 0xffff00, new THREE.Vector2(50, 0), 0);
+    player1 = new Player("player1", 0xffff00, new THREE.Vector2(0, 0), 0);
+    scene.add(player1.graphic);
+
+    ennemy = new Player("ennemy", 0xff0000, new THREE.Vector2(300, 0), 0);
+    scene.add(player1.graphic);
+
+    light1 = new Light("sun", 0xffffff, "0,0,340");
+    scene.add(light1);
+}
+
+function Update(player1)
+{
+    // set some camera attributes
+    var VIEW_ANGLE = 45,
+        ASPECT = WIDTH / HEIGHT,
+        NEAR = 0.1,
+        FAR = 10000;
+
+    $container = $('#container');
+    renderer = new THREE.WebGLRenderer();
+    camera = new THREE.PerspectiveCamera(VIEW_ANGLE,
+                                    ASPECT,
+                                    NEAR,
+                                    FAR);
+    scene = new THREE.Scene();
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    camera.position.z = 500;
+    scene.add(camera);
+
+    renderer.setSize(WIDTH, HEIGHT);
+
+    $container.append(renderer.domElement);
+
+    noGround = [];
+    ground = new Ground(0xffffff, WIDTH, HEIGHT, 10);
+
+    player1.position = new THREE.Vector2(50,0);
+    player1.direction = 0;
+    player1.graphic.position.z = 6;
+    player1.graphic.rotateOnAxis(new THREE.Vector3(0,0,1), player1.direction+(3*Math.PI/2));
+
     scene.add(player1.graphic);
 
     light1 = new Light("sun", 0xffffff, "0,0,340");
@@ -48,7 +89,16 @@ function Ground(color, size_x, size_y, nb_tile)
         for (y = minY; y <= maxY; y = y+sizeOfTileY){
 
             color = colors[Math.floor(Math.random()*colors.length)];
-       
+            if (x == 0 && y == 0)
+            {
+                tmpGround = new THREE.Mesh(
+                    new THREE.PlaneGeometry(sizeOfTileX-10, sizeOfTileY-10),
+                    new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0.6}));
+                    tmpGround.position.x = x;
+                    tmpGround.position.y = y;
+                    scene.add(tmpGround);
+                    continue;
+            }
             if (0x000000 != color)
             {
                 tmpGround = new THREE.Mesh(
@@ -64,7 +114,7 @@ function Ground(color, size_x, size_y, nb_tile)
     }
 }
 
-function Lighht(name, color, position)
+function Light(name, color, position)
 {
     pointLight = new THREE.PointLight(color, 50, 350);
 
