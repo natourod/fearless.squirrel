@@ -28,8 +28,8 @@ function init()
     player1 = new Player("player1", 0xffff00, new THREE.Vector2(0, 0), 0);
     scene.add(player1.graphic);
 
-    ennemy = new Player("ennemy", 0xff0000, new THREE.Vector2(300, 0), 0);
-    scene.add(player1.graphic);
+    ennemy = new Player("ennemy", 0xadd8e6, new THREE.Vector2(50, 50), 0);
+    scene.add(ennemy.graphic);
 
     light1 = new Light("sun", 0xffffff, "0,0,340");
     scene.add(light1);
@@ -37,26 +37,9 @@ function init()
 
 function Update(player1)
 {
-    // set some camera attributes
-    var VIEW_ANGLE = 45,
-        ASPECT = WIDTH / HEIGHT,
-        NEAR = 0.1,
-        FAR = 10000;
-
     $container = $('#container');
-    renderer = new THREE.WebGLRenderer();
-    camera = new THREE.PerspectiveCamera(VIEW_ANGLE,
-                                    ASPECT,
-                                    NEAR,
-                                    FAR);
-    scene = new THREE.Scene();
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    camera.position.z = 500;
-    scene.add(camera);
-
-    renderer.setSize(WIDTH, HEIGHT);
-
+    scene.remove(player1);
     $container.append(renderer.domElement);
 
     noGround = [];
@@ -67,7 +50,10 @@ function Update(player1)
     player1.graphic.position.z = 6;
     player1.graphic.rotateOnAxis(new THREE.Vector3(0,0,1), player1.direction+(3*Math.PI/2));
 
+    ennemy = new Player("player2", 0xadd8e6, new THREE.Vector2(300, 0), 0);
     scene.add(player1.graphic);
+
+    scene.add(ennemy.graphic);
 
     light1 = new Light("sun", 0xffffff, "0,0,340");
     scene.add(light1);

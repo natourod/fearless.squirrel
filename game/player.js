@@ -16,6 +16,8 @@ var Player = function(name, color, position, direction) {
     vehiculeMesh = new THREE.ConeGeometry(5, 20, 32);
     this.graphic = new THREE.Mesh(vehiculeMesh, this.material);
     this.graphic.position.z = 6;
+    this.graphic.position.x = this.position.x;
+    this.graphic.position.y = this.position.y;
 
     this.graphic.rotateOnAxis(new THREE.Vector3(0,0,1), this.direction+(3*Math.PI/2));
 };
@@ -26,10 +28,10 @@ Player.prototype.dead = function () {
         $("#container").html("");
         this.life -= 1
         console.log("life: " + this.life);
-        if (this.life <= 0)
+        if (this.life == 0)
         {
             jQuery('#'+this.name+' >.life').text("Game over!");
-            init();
+            
         }
         else
         {
@@ -94,3 +96,18 @@ Player.prototype.move = function () {
     light1.position.y = this.position.y;
     light1.position.z = this.graphic.position.z ;
 };
+
+function ai()
+{
+    if (this.position.x > 20 && this.position < 40)
+    {
+        this.position.x -= 1;
+        this.graphic.position.x -= 1;
+
+    }
+    else{
+        this.position.x += 1;
+        this.graphic.position.x += 1;
+    }
+    
+}
